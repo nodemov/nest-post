@@ -20,3 +20,8 @@ model Post {
 
   @@map("posts")
 }
+
+model admins {
+  id   Int     @id @default(autoincrement())
+  name String? @db.VarChar
+}
