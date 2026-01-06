@@ -1,0 +1,90 @@
+### Variables
+@baseUrl = http://localhost:3000
+@postId = 18
+
+### Create a new post
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "My First Post",
+  "detail": "This is the content of my first post. It contains useful information.",
+  "cover": "https://example.com/images/cover1.jpg"
+}
+
+### Create a post without cover
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "Post Without Cover",
+  "detail": "This post doesn't have a cover image"
+}
+
+### Get all active posts (excluding soft-deleted)
+GET {{baseUrl}}/posts
+
+### Get all posts including soft-deleted
+GET {{baseUrl}}/posts/all/with-deleted
+
+### Get only deleted posts
+GET {{baseUrl}}/posts/deleted/only
+
+### Get a specific post by ID
+GET {{baseUrl}}/posts/{{postId}}
+
+### Update a post
+PATCH {{baseUrl}}/posts/{{postId}}
+Content-Type: application/json
+
+{
+  "title": "Updated Post Title"
+}
+
+### Update post with multiple fields
+PATCH {{baseUrl}}/posts/{{postId}}
+Content-Type: application/json
+
+{
+  "title": "Completely Updated Post",
+  "detail": "Updated detail content",
+  "cover": "https://example.com/images/new-cover.jpg"
+}
+
+### Soft delete a post
+DELETE {{baseUrl}}/posts/{{postId}}
+
+### Restore a soft-deleted post
+PATCH {{baseUrl}}/posts/{{postId}}/restore
+
+### Force delete (permanently delete) a post
+DELETE {{baseUrl}}/posts/{{postId}}/force
+
+### Test validation - missing title (should return 400)
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "detail": "Post without title"
+}
+
+### Test validation - missing detail (should return 400)
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "Post without detail"
+}
+
+### Test validation - extra fields (should return 400)
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "Test Post",
+  "detail": "Test Detail",
+  "extraField": "This should not be allowed"
+}
+
+### Get non-existent post (should return 404)
+GET {{baseUrl}}/posts/9999
