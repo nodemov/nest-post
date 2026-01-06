@@ -10,11 +10,11 @@ async function main() {
   console.log('Clearing existing posts...');
   await prisma.post.deleteMany({});
 
-  // Generate 500 fake posts
-  console.log('Creating 500 fake posts...');
+  // Generate 250 fake posts
+  console.log('Creating 250 fake posts...');
   const posts = [];
 
-  for (let i = 1; i <= 500; i++) {
+  for (let i = 1; i <= 250; i++) {
     posts.push({
       title: faker.lorem.sentence({ min: 3, max: 8 }),
       detail: faker.lorem.paragraphs({ min: 2, max: 5 }, '\n\n'),
