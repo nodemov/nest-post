@@ -185,6 +185,9 @@ npx prisma migrate dev --name migration_name
 # Apply migrations
 npx prisma migrate deploy
 
+# Seed database with 500 fake posts
+npm run prisma:seed
+
 # Open Prisma Studio
 npx prisma studio
 
