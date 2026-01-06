@@ -21,13 +21,6 @@ export class PostEntity {
   cover: string | null;
 
   @ApiProperty({
-    description: 'Post URL slug',
-    example: 'my-blog-post',
-    nullable: true,
-  })
-  slug: string | null;
-
-  @ApiProperty({
     description: 'Whether the post is active',
     example: true,
   })
