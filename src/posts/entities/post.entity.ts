@@ -3,6 +3,7 @@ export class PostEntity {
   title: string;
   detail: string;
   cover: string | null;
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

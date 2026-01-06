@@ -30,6 +30,16 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get('all/with-deleted')
+  findAllWithDeleted(): Promise<PostEntity[]> {
+    return this.postsService.findAllWithDeleted();
+  }
+
+  @Get('deleted/only')
+  findDeleted(): Promise<PostEntity[]> {
+    return this.postsService.findDeleted();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
     return this.postsService.findOne(id);
@@ -43,9 +53,20 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto);
   }
 
+  @Patch(':id/restore')
+  restore(@Param('id', ParseIntPipe) id: number): Promise<PostEntity> {
+    return this.postsService.restore(id);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.postsService.remove(id);
+  }
+
+  @Delete(':id/force')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async forceRemove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.postsService.forceRemove(id);
   }
 }

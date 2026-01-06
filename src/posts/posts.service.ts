@@ -16,6 +16,9 @@ export class PostsService {
 
   async findAll(): Promise<PostEntity[]> {
     return this.prisma.post.findMany({
+      where: {
+        deletedAt: null,
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -23,8 +26,11 @@ export class PostsService {
   }
 
   async findOne(id: number): Promise<PostEntity> {
-    const post = await this.prisma.post.findUnique({
-      where: { id },
+    const post = await this.prisma.post.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+      },
     });
 
     if (!post) {
@@ -35,7 +41,7 @@ export class PostsService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<PostEntity> {
-    await this.findOne(id); // Check if post exists
+    await this.findOne(id); // Check if post exists and not deleted
 
     return this.prisma.post.update({
       where: { id },
@@ -44,7 +50,65 @@ export class PostsService {
   }
 
   async remove(id: number): Promise<PostEntity> {
-    await this.findOne(id); // Check if post exists
+    await this.findOne(id); // Check if post exists and not deleted
+
+    return this.prisma.post.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
+
+  async restore(id: number): Promise<PostEntity> {
+    const post = await this.prisma.post.findFirst({
+      where: {
+        id,
+        deletedAt: { not: null },
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException(
+        `Deleted post with ID ${id} not found`,
+      );
+    }
+
+    return this.prisma.post.update({
+      where: { id },
+      data: {
+        deletedAt: null,
+      },
+    });
+  }
+
+  async findAllWithDeleted(): Promise<PostEntity[]> {
+    return this.prisma.post.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async findDeleted(): Promise<PostEntity[]> {
+    return this.prisma.post.findMany({
+      where: {
+        deletedAt: { not: null },
+      },
+      orderBy: {
+        deletedAt: 'desc',
+      },
+    });
+  }
+
+  async forceRemove(id: number): Promise<PostEntity> {
+    const post = await this.prisma.post.findUnique({
+      where: { id },
+    });
+
+    if (!post) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
 
     return this.prisma.post.delete({
       where: { id },

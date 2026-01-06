@@ -5,6 +5,7 @@ A NestJS application with Prisma ORM and PostgreSQL for managing posts.
 ## Features
 
 - ✅ CRUD operations for posts
+- ✅ Soft delete functionality with restore capability
 - ✅ PostgreSQL database with Prisma ORM
 - ✅ Data validation with class-validator
 - ✅ Global exception handling
@@ -60,11 +61,15 @@ The application will run on `http://localhost:3000`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/posts` | Get all posts |
+| GET | `/posts` | Get all active posts |
+| GET | `/posts/all/with-deleted` | Get all posts including deleted |
+| GET | `/posts/deleted/only` | Get only deleted posts |
 | GET | `/posts/:id` | Get a post by ID |
 | POST | `/posts` | Create a new post |
 | PATCH | `/posts/:id` | Update a post |
-| DELETE | `/posts/:id` | Delete a post |
+| PATCH | `/posts/:id/restore` | Restore a soft-deleted post |
+| DELETE | `/posts/:id` | Soft delete a post |
+| DELETE | `/posts/:id/force` | Permanently delete a post |
 
 ### Example Requests
 
@@ -98,9 +103,24 @@ curl -X PATCH http://localhost:3000/posts/1 \
   }'
 ```
 
-#### Delete a Post
+#### Soft Delete a Post
 ```bash
 curl -X DELETE http://localhost:3000/posts/1
+```
+
+#### Restore a Deleted Post
+```bash
+curl -X PATCH http://localhost:3000/posts/1/restore
+```
+
+#### Get Deleted Posts
+```bash
+curl http://localhost:3000/posts/deleted/only
+```
+
+#### Permanently Delete a Post (Force Delete)
+```bash
+curl -X DELETE http://localhost:3000/posts/1/force
 ```
 
 ## Database Schema
@@ -113,6 +133,7 @@ curl -X DELETE http://localhost:3000/posts/1
 | title | String | Post title (required) |
 | detail | String | Post content (required) |
 | cover | String | Cover image URL (optional) |
+| deletedAt | DateTime | Soft delete timestamp (nullable) |
 | createdAt | DateTime | Creation timestamp |
 | updatedAt | DateTime | Last update timestamp |
 
@@ -165,6 +186,7 @@ src/
 6. **Module Organization**: Feature-based module structure
 7. **Database Connection**: Global Prisma module with lifecycle hooks
 8. **RESTful API**: Following REST conventions
+9. **Soft Delete**: Non-destructive delete with restore functionality
 
 ## License
 
