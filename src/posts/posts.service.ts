@@ -16,7 +16,34 @@ export class PostsService {
     });
   }
 
-  async findAll(): Promise<PostEntity[]> {
+  async findAll(
+    paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+      const { page = 1, limit = 10 } = paginationDto;
+      const skip = (page - 1) * limit;
+
+      const [data, total] = await Promise.all([
+        this.prisma.post.findMany({
+          where: {
+            deletedAt: null,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip,
+          take: limit,
+        }),
+        this.prisma.post.count({
+          where: {
+            deletedAt: null,
+          },
+        }),
+      ]);
+
+      return new PaginatedResponseDto(data, total, page, limit);
+    }
+
     return this.prisma.post.findMany({
       where: {
         deletedAt: null,
@@ -25,33 +52,6 @@ export class PostsService {
         createdAt: 'desc',
       },
     });
-  }
-
-  async findAllPaginated(
-    paginationDto: PaginationDto,
-  ): Promise<PaginatedResponseDto<PostEntity>> {
-    const { page = 1, limit = 10 } = paginationDto;
-    const skip = (page - 1) * limit;
-
-    const [data, total] = await Promise.all([
-      this.prisma.post.findMany({
-        where: {
-          deletedAt: null,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        skip,
-        take: limit,
-      }),
-      this.prisma.post.count({
-        where: {
-          deletedAt: null,
-        },
-      }),
-    ]);
-
-    return new PaginatedResponseDto(data, total, page, limit);
   }
 
   async findOne(id: number): Promise<PostEntity> {
@@ -111,7 +111,27 @@ export class PostsService {
     });
   }
 
-  async findAllWithDeleted(): Promise<PostEntity[]> {
+  async findAllWithDeleted(
+    paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+      const { page = 1, limit = 10 } = paginationDto;
+      const skip = (page - 1) * limit;
+
+      const [data, total] = await Promise.all([
+        this.prisma.post.findMany({
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip,
+          take: limit,
+        }),
+        this.prisma.post.count(),
+      ]);
+
+      return new PaginatedResponseDto(data, total, page, limit);
+    }
+
     return this.prisma.post.findMany({
       orderBy: {
         createdAt: 'desc',
@@ -119,7 +139,34 @@ export class PostsService {
     });
   }
 
-  async findDeleted(): Promise<PostEntity[]> {
+  async findDeleted(
+    paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+      const { page = 1, limit = 10 } = paginationDto;
+      const skip = (page - 1) * limit;
+
+      const [data, total] = await Promise.all([
+        this.prisma.post.findMany({
+          where: {
+            deletedAt: { not: null },
+          },
+          orderBy: {
+            deletedAt: 'desc',
+          },
+          skip,
+          take: limit,
+        }),
+        this.prisma.post.count({
+          where: {
+            deletedAt: { not: null },
+          },
+        }),
+      ]);
+
+      return new PaginatedResponseDto(data, total, page, limit);
+    }
+
     return this.prisma.post.findMany({
       where: {
         deletedAt: { not: null },

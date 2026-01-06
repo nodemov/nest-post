@@ -39,36 +39,37 @@ export class PostsController {
     return this.postsService.create(createPostDto);
   }
 
-  @Get('paginated')
-  @ApiOperation({ summary: 'Get paginated active posts' })
-  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 100)' })
-  @ApiResponse({ status: 200, description: 'Paginated list of posts' })
-  findAllPaginated(
-    @Query() paginationDto: PaginationDto,
-  ): Promise<PaginatedResponseDto<PostEntity>> {
-    return this.postsService.findAllPaginated(paginationDto);
-  }
-
   @Get()
   @ApiOperation({ summary: 'Get all active posts (excluding soft-deleted)' })
-  @ApiResponse({ status: 200, description: 'List of active posts', type: [PostEntity] })
-  findAll(): Promise<PostEntity[]> {
-    return this.postsService.findAll();
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (optional)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (optional, max: 100)' })
+  @ApiResponse({ status: 200, description: 'List of active posts (paginated if page/limit provided)' })
+  findAll(
+    @Query() paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    return this.postsService.findAll(paginationDto);
   }
 
   @Get('all/with-deleted')
   @ApiOperation({ summary: 'Get all posts including soft-deleted ones' })
-  @ApiResponse({ status: 200, description: 'List of all posts', type: [PostEntity] })
-  findAllWithDeleted(): Promise<PostEntity[]> {
-    return this.postsService.findAllWithDeleted();
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (optional)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (optional, max: 100)' })
+  @ApiResponse({ status: 200, description: 'List of all posts (paginated if page/limit provided)' })
+  findAllWithDeleted(
+    @Query() paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    return this.postsService.findAllWithDeleted(paginationDto);
   }
 
   @Get('deleted/only')
   @ApiOperation({ summary: 'Get only soft-deleted posts' })
-  @ApiResponse({ status: 200, description: 'List of deleted posts', type: [PostEntity] })
-  findDeleted(): Promise<PostEntity[]> {
-    return this.postsService.findDeleted();
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (optional)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (optional, max: 100)' })
+  @ApiResponse({ status: 200, description: 'List of deleted posts (paginated if page/limit provided)' })
+  findDeleted(
+    @Query() paginationDto?: PaginationDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    return this.postsService.findDeleted(paginationDto);
   }
 
   @Get(':id')

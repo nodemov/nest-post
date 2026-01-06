@@ -5,12 +5,13 @@ A NestJS application with Prisma ORM and PostgreSQL for managing posts.
 ## Features
 
 - ✅ CRUD operations for posts
-- ✅ Pagination with metadata (page, limit, total, hasNext/Previous)
+- ✅ Smart pagination on all list endpoints (optional query params)
 - ✅ Soft delete functionality with restore capability
 - ✅ PostgreSQL database with Prisma ORM
 - ✅ Data validation with class-validator
 - ✅ Global exception handling
 - ✅ REST API best practices
+- ✅ Database seeder with 500 fake posts
 
 ## Prerequisites
 
@@ -74,10 +75,9 @@ The Swagger UI provides:
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/posts` | Get all active posts |
-| GET | `/posts/paginated` | Get paginated active posts |
-| GET | `/posts/all/with-deleted` | Get all posts including deleted |
-| GET | `/posts/deleted/only` | Get only deleted posts |
+| GET | `/posts` | Get all active posts (supports pagination with ?page&limit) |
+| GET | `/posts/all/with-deleted` | Get all posts including deleted (supports pagination) |
+| GET | `/posts/deleted/only` | Get only deleted posts (supports pagination) |
 | GET | `/posts/:id` | Get a post by ID |
 | POST | `/posts` | Create a new post |
 | PATCH | `/posts/:id` | Update a post |
@@ -100,27 +100,33 @@ curl -X POST http://localhost:3000/posts \
 
 #### Get All Posts
 ```bash
+# Get all posts (no pagination)
 curl http://localhost:3000/posts
+
+# Get paginated posts - page 1 with default limit (10 items)
+curl http://localhost:3000/posts?page=1
+
+# Get paginated posts - page 2 with 20 items per page
+curl http://localhost:3000/posts?page=2&limit=20
 ```
 
-#### Get Paginated Posts
+#### Get Paginated Posts with Metadata
 ```bash
-# First page with default limit (10 items)
-curl http://localhost:3000/posts/paginated?page=1
-
-# Second page with 20 items per page
-curl http://localhost:3000/posts/paginated?page=2&limit=20
+# Any endpoint with page/limit returns paginated response:
+curl "http://localhost:3000/posts?page=1&limit=10"
+curl "http://localhost:3000/posts/all/with-deleted?page=1&limit=20"
+curl "http://localhost:3000/posts/deleted/only?page=1&limit=15"
 
 # Response includes pagination metadata:
 # {
 #   "data": [...posts...],
 #   "meta": {
-#     "total": 45,
-#     "page": 2,
-#     "limit": 20,
-#     "totalPages": 3,
+#     "total": 450,
+#     "page": 1,
+#     "limit": 10,
+#     "totalPages": 45,
 #     "hasNextPage": true,
-#     "hasPreviousPage": true
+#     "hasPreviousPage": false
 #   }
 # }
 ```
