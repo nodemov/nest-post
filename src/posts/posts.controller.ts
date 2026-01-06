@@ -9,17 +9,21 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -33,6 +37,17 @@ export class PostsController {
   @ApiResponse({ status: 400, description: 'Bad request - validation failed' })
   create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
     return this.postsService.create(createPostDto);
+  }
+
+  @Get('paginated')
+  @ApiOperation({ summary: 'Get paginated active posts' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 100)' })
+  @ApiResponse({ status: 200, description: 'Paginated list of posts' })
+  findAllPaginated(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginatedResponseDto<PostEntity>> {
+    return this.postsService.findAllPaginated(paginationDto);
   }
 
   @Get()

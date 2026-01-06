@@ -5,6 +5,7 @@ A NestJS application with Prisma ORM and PostgreSQL for managing posts.
 ## Features
 
 - ✅ CRUD operations for posts
+- ✅ Pagination with metadata (page, limit, total, hasNext/Previous)
 - ✅ Soft delete functionality with restore capability
 - ✅ PostgreSQL database with Prisma ORM
 - ✅ Data validation with class-validator
@@ -74,6 +75,7 @@ The Swagger UI provides:
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/posts` | Get all active posts |
+| GET | `/posts/paginated` | Get paginated active posts |
 | GET | `/posts/all/with-deleted` | Get all posts including deleted |
 | GET | `/posts/deleted/only` | Get only deleted posts |
 | GET | `/posts/:id` | Get a post by ID |
@@ -99,6 +101,28 @@ curl -X POST http://localhost:3000/posts \
 #### Get All Posts
 ```bash
 curl http://localhost:3000/posts
+```
+
+#### Get Paginated Posts
+```bash
+# First page with default limit (10 items)
+curl http://localhost:3000/posts/paginated?page=1
+
+# Second page with 20 items per page
+curl http://localhost:3000/posts/paginated?page=2&limit=20
+
+# Response includes pagination metadata:
+# {
+#   "data": [...posts...],
+#   "meta": {
+#     "total": 45,
+#     "page": 2,
+#     "limit": 20,
+#     "totalPages": 3,
+#     "hasNextPage": true,
+#     "hasPreviousPage": true
+#   }
+# }
 ```
 
 #### Get a Post by ID

@@ -24,6 +24,15 @@ Content-Type: application/json
 ### Get all active posts (excluding soft-deleted)
 GET {{baseUrl}}/posts
 
+### Get paginated posts - first page (default 10 items)
+GET {{baseUrl}}/posts/paginated?page=1
+
+### Get paginated posts - page 2 with 5 items per page
+GET {{baseUrl}}/posts/paginated?page=2&limit=5
+
+### Get paginated posts - page 1 with 20 items per page
+GET {{baseUrl}}/posts/paginated?page=1&limit=20
+
 ### Get all posts including soft-deleted
 GET {{baseUrl}}/posts/all/with-deleted
 

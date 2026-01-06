@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
 
 @Injectable()
 export class PostsService {
@@ -23,6 +25,33 @@ export class PostsService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async findAllPaginated(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedResponseDto<PostEntity>> {
+    const { page = 1, limit = 10 } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.post.findMany({
+        where: {
+          deletedAt: null,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+      this.prisma.post.count({
+        where: {
+          deletedAt: null,
+        },
+      }),
+    ]);
+
+    return new PaginatedResponseDto(data, total, page, limit);
   }
 
   async findOne(id: number): Promise<PostEntity> {
