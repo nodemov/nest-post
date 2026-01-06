@@ -1,10 +1,10 @@
 {
   "name": "nest-post",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NestJS Prisma PostgreSQL CRUD Posts Example",
-  "author": "",
+  "author": "NodeMov",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
