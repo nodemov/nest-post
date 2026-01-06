@@ -2,10 +2,11 @@ import { Module, ValidationPipe, MiddlewareConsumer, NestModule, RequestMethod }
 import { APP_PIPE } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { PostsModule } from './posts/posts.module';
+import { HealthModule } from './health/health.module';
 import { ValidateIdMiddleware } from './common/middleware/validate-id.middleware';
 
 @Module({
-  imports: [PrismaModule, PostsModule],
+  imports: [PrismaModule, PostsModule, HealthModule],
   providers: [
     {
       provide: APP_PIPE,
