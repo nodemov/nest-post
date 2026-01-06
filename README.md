@@ -176,7 +176,6 @@ curl -X DELETE http://localhost:3000/posts/1/force
 | title | String | ชื่อโพสต์ (จำเป็น) |
 | detail | String | เนื้อหาโพสต์ (จำเป็น) |
 | cover | String | URL รูปภาพปก (ไม่บังคับ) |
-| slug | String | URL slug (ไม่บังคับ) |
 | isActive | Boolean | สถานะว่าโพสต์ active หรือไม่ (ค่าเริ่มต้น: true) |
 | deletedAt | DateTime | เวลาที่ Soft delete (nullable) |
 | createdAt | DateTime | เวลาที่สร้าง |
@@ -352,7 +351,7 @@ npx prisma migrate dev --name describe_your_changes
 npm test
 ```
 
-### ตัวอย่างที่สมบูรณ์: หลังจาก Laravel เพิ่มฟิลด์ `slug` และ `isActive`
+### ตัวอย่างที่สมบูรณ์: หลังจาก Laravel เพิ่มฟิลด์ `isActive`
 ```bash
 # 1. Pull schema ฐานข้อมูล
 npx prisma db pull
