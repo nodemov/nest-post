@@ -17,6 +17,7 @@ model Post {
   deletedAt DateTime?
   isActive  Boolean   @default(true)
   slug      String?
+  reason    String?
 
   @@map("posts")
 }
