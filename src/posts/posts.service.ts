@@ -19,7 +19,7 @@ export class PostsService {
   async findAll(
     paginationDto?: PaginationDto,
   ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
-    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+    if (paginationDto && (paginationDto.page !== undefined || paginationDto.limit !== undefined)) {
       const { page = 1, limit = 10 } = paginationDto;
       const skip = (page - 1) * limit;
 
@@ -114,7 +114,7 @@ export class PostsService {
   async findAllWithDeleted(
     paginationDto?: PaginationDto,
   ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
-    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+    if (paginationDto && (paginationDto.page !== undefined || paginationDto.limit !== undefined)) {
       const { page = 1, limit = 10 } = paginationDto;
       const skip = (page - 1) * limit;
 
@@ -142,7 +142,7 @@ export class PostsService {
   async findDeleted(
     paginationDto?: PaginationDto,
   ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
-    if (paginationDto && (paginationDto.page || paginationDto.limit)) {
+    if (paginationDto && (paginationDto.page !== undefined || paginationDto.limit !== undefined)) {
       const { page = 1, limit = 10 } = paginationDto;
       const skip = (page - 1) * limit;
 
