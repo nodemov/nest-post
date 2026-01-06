@@ -222,7 +222,7 @@ model Post {
 }
 
 // ตารางที่ Laravel จัดการ (เพิ่มเข้ามาด้วย!)
-model Admin {
+model User {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
@@ -230,7 +230,7 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  @@map("admins")
+  @@map("users")
 }
 ```
 
@@ -274,7 +274,6 @@ npx prisma migrate deploy
 
 **ตารางฐานข้อมูลที่ใช้ร่วมกัน:**
 - `posts` - จัดการโดย NestJS API
-- `admins` - จัดการโดย Laravel Backoffice (อ่านอย่างเดียวใน NestJS)
 - `users` - ใช้ร่วมกัน (ทั้งสองแอปพลิเคชันสามารถแก้ไขได้)
 
 ### 5. ทางเลือก: ใช้ Database Schemas/Namespaces
@@ -284,7 +283,7 @@ npx prisma migrate deploy
 ```sql
 -- ตาราง Laravel
 CREATE SCHEMA backoffice;
-CREATE TABLE backoffice.admins (...);
+CREATE TABLE backoffice.users (...);
 
 -- ตาราง NestJS อยู่ใน public schema
 ```
@@ -300,13 +299,13 @@ DATABASE_URL="postgresql://postgres:@127.0.0.1:5432/nest_posts?schema=public"
 
 ```bash
 # 1. สำรองข้อมูลตารางภายนอกก่อน
-pg_dump -h 127.0.0.1 -U postgres -t admins nest_posts > admins_backup.sql
+pg_dump -h 127.0.0.1 -U postgres -t users nest_posts > users_backup.sql
 
 # 2. รัน reset
 npx prisma migrate reset
 
 # 3. กลับคืนตารางภายนอก
-psql -h 127.0.0.1 -U postgres -d nest_posts < admins_backup.sql
+psql -h 127.0.0.1 -U postgres -d nest_posts < users_backup.sql
 ```
 
 ### ⚠️ คำเตือนสำคัญ
