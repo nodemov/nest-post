@@ -25,4 +25,5 @@ model users {
   name   String? @db.VarChar
   age    Int?
   gender String? @db.VarChar(10)
+  isActive  Boolean   @default(false)
 }
