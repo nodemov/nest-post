@@ -35,4 +35,13 @@ export class CreatePostDto {
   @IsString()
   @IsOptional()
   slug?: string;
+
+  @ApiProperty({
+    description: 'Whether the post is active',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsOptional()
+  isActive?: boolean;
 }

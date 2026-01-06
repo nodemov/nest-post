@@ -33,4 +33,11 @@ export class UpdatePostDto {
   @IsString()
   @IsOptional()
   slug?: string;
+
+  @ApiPropertyOptional({
+    description: 'Whether the post is active',
+    example: true,
+  })
+  @IsOptional()
+  isActive?: boolean;
 }

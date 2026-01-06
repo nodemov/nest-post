@@ -28,6 +28,12 @@ export class PostEntity {
   slug: string | null;
 
   @ApiProperty({
+    description: 'Whether the post is active',
+    example: true,
+  })
+  isActive: boolean;
+
+  @ApiProperty({
     description: 'Soft delete timestamp',
     example: null,
     nullable: true,

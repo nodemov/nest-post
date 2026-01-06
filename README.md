@@ -177,6 +177,7 @@ curl -X DELETE http://localhost:3000/posts/1/force
 | detail | String | Post content (required) |
 | cover | String | Cover image URL (optional) |
 | slug | String | URL slug (optional) |
+| isActive | Boolean | Whether the post is active (default: true) |
 | deletedAt | DateTime | Soft delete timestamp (nullable) |
 | createdAt | DateTime | Creation timestamp |
 | updatedAt | DateTime | Last update timestamp |
@@ -221,30 +222,47 @@ Update the Prisma Client with the new schema:
 npx prisma generate
 ```
 
-### Step 3: Update Your Code
+### Step 3: Create a Migration File
+**IMPORTANT**: After pulling changes, you must create a migration file to persist these changes:
+```bash
+npx prisma migrate dev --name describe_your_changes
+```
+
+This ensures that when you run `npx prisma migrate reset` in the future, the external changes won't be lost.
+
+### Step 4: Update Your Code
 Manually update your DTOs and entities to reflect the new fields:
 - Update `src/posts/entities/post.entity.ts` to add new fields
 - Update `src/posts/dto/create-post.dto.ts` for creation
 - Update `src/posts/dto/update-post.dto.ts` for updates
 
-### Step 4: Test Your Changes
+### Step 5: Test Your Changes
 Run tests to ensure everything works correctly:
 ```bash
 npm test
 ```
 
-### Example: After Laravel Adds a `slug` Field
+### Complete Example: After Laravel Adds `slug` and `isActive` Fields
 ```bash
-# 1. Pull the changes
+# 1. Pull the database schema
 npx prisma db pull
 
-# 2. Generate new client
+# 2. Generate Prisma Client
 npx prisma generate
 
-# 3. Update your DTOs and entities manually
-# 4. Run tests
+# 3. Create migration to persist changes (CRITICAL STEP!)
+npx prisma migrate dev --name add_slug_and_is_active
+
+# 4. Update your DTOs and entities manually
+# 5. Run tests
 npm test
 ```
+
+### ⚠️ Important Warning
+
+**WITHOUT Step 3**: If you skip creating a migration after `db pull`, running `npx prisma migrate reset` will DELETE the external changes because they only exist in `schema.prisma` but not in the migration files.
+
+**WITH Step 3**: The migration files will include all changes, so `migrate reset` will properly restore everything.
 
 ## Testing
 
