@@ -296,4 +296,4 @@ src/
 
 ## License
 
-UNLICENSED
+MIT
