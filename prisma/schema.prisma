@@ -21,7 +21,8 @@ model Post {
 }
 
 model users {
-  id   Int     @id @default(autoincrement())
-  name String? @db.VarChar
-  age  Int?
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar
+  age    Int?
+  gender String? @db.VarChar(10)
 }
