@@ -1,94 +1,94 @@
-# NestJS Prisma PostgreSQL CRUD Example
+# ตัวอย่าง NestJS Prisma PostgreSQL CRUD
 
-A NestJS application with Prisma ORM and PostgreSQL for managing posts.
+แอปพลิเคชัน NestJS ที่ใช้ Prisma ORM และ PostgreSQL สำหรับจัดการโพสต์
 
-## Features
+## ฟีเจอร์
 
-- ✅ CRUD operations for posts
-- ✅ Smart pagination on all list endpoints (optional query params)
-- ✅ Soft delete functionality with restore capability
-- ✅ PostgreSQL database with Prisma ORM
-- ✅ Data validation with class-validator
-- ✅ Global exception handling
-- ✅ REST API best practices
-- ✅ Database seeder with 500 fake posts
+- ✅ การทำ CRUD operations สำหรับโพสต์
+- ✅ Smart pagination ในทุกๆ list endpoints (query params แบบ optional)
+- ✅ ฟังก์ชัน Soft delete พร้อมความสามารถในการกลับคืน
+- ✅ ฐานข้อมูล PostgreSQL พร้อม Prisma ORM
+- ✅ การตรวจสอบข้อมูลด้วย class-validator
+- ✅ การจัดการ exception แบบ global
+- ✅ แนวทางปฏิบัติที่ดีของ REST API
+- ✅ Database seeder พร้อมโพสต์ทดสอบ 500 รายการ
 
-## Prerequisites
+## สิ่งที่ต้องมีก่อนเริ่มใช้งาน
 
 - Node.js (v18+)
 - PostgreSQL database
-- npm or yarn
+- npm หรือ yarn
 
-## Installation
+## การติดตั้ง
 
-1. Install dependencies:
+1. ติดตั้ง dependencies:
 ```bash
 npm install
 ```
 
-2. Configure environment variables:
-Create a `.env` file in the root directory:
+2. ตั้งค่า environment variables:
+สร้างไฟล์ `.env` ในไดเรกทอรีหลัก:
 ```
 DATABASE_URL="postgresql://postgres:@127.0.0.1:5432/nest_posts?schema=public"
 TZ=UTC
 ```
 
-3. Generate Prisma Client:
+3. สร้าง Prisma Client:
 ```bash
 npx prisma generate
 ```
 
-4. Run database migrations:
+4. รัน database migrations:
 ```bash
 npx prisma migrate dev --name init
 ```
 
-## Running the Application
+## การรันแอปพลิเคชัน
 
-### Development mode
+### โหมด Development
 ```bash
 npm run start:dev
 ```
 
-### Production mode
+### โหมด Production
 ```bash
 npm run build
 npm run start:prod
 ```
 
-The application will run on `http://localhost:3000`
+แอปพลิเคชันจะทำงานที่ `http://localhost:3000`
 
-## API Documentation
+## เอกสาร API
 
-Once the application is running, you can access the **Swagger API documentation** at:
+เมื่อแอปพลิเคชันทำงานแล้ว คุณสามารถเข้าถึง **เอกสาร Swagger API** ได้ที่:
 
 **http://localhost:3000/api**
 
-The Swagger UI provides:
-- Interactive API testing
-- Complete endpoint documentation
+Swagger UI ให้บริการ:
+- การทดสอบ API แบบ Interactive
+- เอกสาร endpoint ที่สมบูรณ์
 - Request/response schemas
-- Try it out feature for all endpoints
+- ฟีเจอร์ Try it out สำหรับทุก endpoints
 
 ## API Endpoints
 
 ### Posts
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/posts` | Get all active posts (supports pagination with ?page&limit) |
-| GET | `/posts/all/with-deleted` | Get all posts including deleted (supports pagination) |
-| GET | `/posts/deleted/only` | Get only deleted posts (supports pagination) |
-| GET | `/posts/:id` | Get a post by ID |
-| POST | `/posts` | Create a new post |
-| PATCH | `/posts/:id` | Update a post |
-| PATCH | `/posts/:id/restore` | Restore a soft-deleted post |
-| DELETE | `/posts/:id` | Soft delete a post |
-| DELETE | `/posts/:id/force` | Permanently delete a post |
+| Method | Endpoint | คำอธิบาย |
+|--------|----------|----------|
+| GET | `/posts` | ดึงโพสต์ที่ active ทั้งหมด (รองรับ pagination ด้วย ?page&limit) |
+| GET | `/posts/all/with-deleted` | ดึงโพสต์ทั้งหมดรวมทั้งที่ถูกลบ (รองรับ pagination) |
+| GET | `/posts/deleted/only` | ดึงเฉพาะโพสต์ที่ถูกลบ (รองรับ pagination) |
+| GET | `/posts/:id` | ดึงโพสต์ตาม ID |
+| POST | `/posts` | สร้างโพสต์ใหม่ |
+| PATCH | `/posts/:id` | อัปเดตโพสต์ |
+| PATCH | `/posts/:id/restore` | กลับคืนโพสต์ที่ถูก soft-delete |
+| DELETE | `/posts/:id` | Soft delete โพสต์ |
+| DELETE | `/posts/:id/force` | ลบโพสต์ถาวร |
 
-### Example Requests
+### ตัวอย่างการใช้งาน
 
-#### Create a Post
+#### สร้างโพสต์
 ```bash
 curl -X POST http://localhost:3000/posts \
   -H "Content-Type: application/json" \
@@ -99,26 +99,26 @@ curl -X POST http://localhost:3000/posts \
   }'
 ```
 
-#### Get All Posts
+#### ดึงโพสต์ทั้งหมด
 ```bash
-# Get all posts (no pagination)
+# ดึงโพสต์ทั้งหมด (ไม่มี pagination)
 curl http://localhost:3000/posts
 
-# Get paginated posts - page 1 with default limit (10 items)
+# ดึงโพสต์แบบ pagination - หน้า 1 พร้อม limit เริ่มต้น (10 รายการ)
 curl http://localhost:3000/posts?page=1
 
-# Get paginated posts - page 2 with 20 items per page
+# ดึงโพสต์แบบ pagination - หน้า 2 พร้อม 20 รายการต่อหน้า
 curl http://localhost:3000/posts?page=2&limit=20
 ```
 
-#### Get Paginated Posts with Metadata
+#### ดึงโพสต์แบบ Pagination พร้อม Metadata
 ```bash
-# Any endpoint with page/limit returns paginated response:
+# endpoint ใดๆ ที่มี page/limit จะคืนค่าแบบ paginated response:
 curl "http://localhost:3000/posts?page=1&limit=10"
 curl "http://localhost:3000/posts/all/with-deleted?page=1&limit=20"
 curl "http://localhost:3000/posts/deleted/only?page=1&limit=15"
 
-# Response includes pagination metadata:
+# Response จะรวม pagination metadata:
 # {
 #   "data": [...posts...],
 #   "meta": {
@@ -132,12 +132,12 @@ curl "http://localhost:3000/posts/deleted/only?page=1&limit=15"
 # }
 ```
 
-#### Get a Post by ID
+#### ดึงโพสต์ตาม ID
 ```bash
 curl http://localhost:3000/posts/1
 ```
 
-#### Update a Post
+#### อัปเดตโพสต์
 ```bash
 curl -X PATCH http://localhost:3000/posts/1 \
   -H "Content-Type: application/json" \
@@ -146,141 +146,252 @@ curl -X PATCH http://localhost:3000/posts/1 \
   }'
 ```
 
-#### Soft Delete a Post
+#### Soft Delete โพสต์
 ```bash
 curl -X DELETE http://localhost:3000/posts/1
 ```
 
-#### Restore a Deleted Post
+#### กลับคืนโพสต์ที่ถูกลบ
 ```bash
 curl -X PATCH http://localhost:3000/posts/1/restore
 ```
 
-#### Get Deleted Posts
+#### ดึงโพสต์ที่ถูกลบ
 ```bash
 curl http://localhost:3000/posts/deleted/only
 ```
 
-#### Permanently Delete a Post (Force Delete)
+#### ลบโพสต์ถาวร (Force Delete)
 ```bash
 curl -X DELETE http://localhost:3000/posts/1/force
 ```
 
-## Database Schema
+## โครงสร้างฐานข้อมูล
 
 ### Post Model
 
-| Field | Type | Description |
-|-------|------|-------------|
+| ฟิลด์ | ประเภท | คำอธิบาย |
+|-------|--------|----------|
 | id | Int | Primary key (auto-increment) |
-| title | String | Post title (required) |
-| detail | String | Post content (required) |
-| cover | String | Cover image URL (optional) |
-| slug | String | URL slug (optional) |
-| isActive | Boolean | Whether the post is active (default: true) |
-| deletedAt | DateTime | Soft delete timestamp (nullable) |
-| createdAt | DateTime | Creation timestamp |
-| updatedAt | DateTime | Last update timestamp |
+| title | String | ชื่อโพสต์ (จำเป็น) |
+| detail | String | เนื้อหาโพสต์ (จำเป็น) |
+| cover | String | URL รูปภาพปก (ไม่บังคับ) |
+| slug | String | URL slug (ไม่บังคับ) |
+| isActive | Boolean | สถานะว่าโพสต์ active หรือไม่ (ค่าเริ่มต้น: true) |
+| deletedAt | DateTime | เวลาที่ Soft delete (nullable) |
+| createdAt | DateTime | เวลาที่สร้าง |
+| updatedAt | DateTime | เวลาที่อัปเดตล่าสุด |
 
-## Prisma Commands
+## คำสั่ง Prisma
 
 ```bash
-# Generate Prisma Client
+# สร้าง Prisma Client
 npx prisma generate
 
-# Create migration
+# สร้าง migration
 npx prisma migrate dev --name migration_name
 
 # Apply migrations
 npx prisma migrate deploy
 
-# Seed database with 500 fake posts
+# Seed ฐานข้อมูลด้วยโพสต์ทดสอบ 500 รายการ
 npm run prisma:seed
 
-# Open Prisma Studio
+# เปิด Prisma Studio
 npx prisma studio
 
-# Reset database
+# Reset ฐานข้อมูล
 npx prisma migrate reset
 ```
 
-## Syncing Database Changes from External Sources
+## แนวทางที่แนะนำสำหรับการใช้ฐานข้อมูลร่วมกัน
 
-If another application (e.g., Laravel backoffice) modifies the database schema, you can sync those changes to your NestJS API:
+เมื่อ NestJS API ของคุณใช้ฐานข้อมูลร่วมกับแอปพลิเคชันอื่นๆ (เช่น Laravel backoffice) ให้ปฏิบัติตามแนวทางที่ดีเหล่านี้:
 
-### Step 1: Introspect the Database
-Pull the current database schema into your Prisma schema file:
+### 1. รักษา Prisma Schema ให้ sync กับตารางทั้งหมด
+
+เพิ่มตารางฐานข้อมูลทั้งหมดลงใน `prisma/schema.prisma` แม้ว่าจะถูกจัดการโดยแอปพลิเคชันอื่นก็ตาม:
+
+```prisma
+// ตารางที่ NestJS จัดการ
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  // ... ฟิลด์อื่นๆ
+  @@map("posts")
+}
+
+// ตารางที่ Laravel จัดการ (เพิ่มเข้ามาด้วย!)
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("admins")
+}
+```
+
+### 2. Pull การเปลี่ยนแปลงจากภายนอกอย่างสม่ำเสมอ
+
+หลังจากแอปพลิเคชันภายนอกแก้ไขฐานข้อมูล:
+
+```bash
+# 1. Pull schema ฐานข้อมูลปัจจุบัน
+npx prisma db pull
+
+# 2. สร้าง Prisma Client
+npx prisma generate
+
+# 3. สร้าง migration เพื่อเก็บการเปลี่ยนแปลง (สำคัญมาก!)
+npx prisma migrate dev --name sync_with_external_changes
+```
+
+### 3. ใช้คำสั่ง Migration ที่ถูกต้อง
+
+**Development:**
+```bash
+# Apply migrations ใหม่
+npx prisma migrate dev
+
+# หลีกเลี่ยง: ใช้ reset เฉพาะใน development และด้วยความระมัดระวัง
+npx prisma migrate reset
+```
+
+**Production:**
+```bash
+# Deploy migrations (ปลอดภัย ไม่มีการสูญเสียข้อมูล)
+npx prisma migrate deploy
+
+# ห้ามใช้ migrate reset ใน production
+```
+
+### 4. บันทึกตารางที่ใช้ร่วมกัน
+
+เพิ่มส่วนเพื่อติดตามว่าแอปพลิเคชันใดจัดการตารางใด:
+
+**ตารางฐานข้อมูลที่ใช้ร่วมกัน:**
+- `posts` - จัดการโดย NestJS API
+- `admins` - จัดการโดย Laravel Backoffice (อ่านอย่างเดียวใน NestJS)
+- `users` - ใช้ร่วมกัน (ทั้งสองแอปพลิเคชันสามารถแก้ไขได้)
+
+### 5. ทางเลือก: ใช้ Database Schemas/Namespaces
+
+แยกตารางไปยัง PostgreSQL schemas ที่แตกต่างกันเพื่อหลีกเลี่ยงความขัดแย้ง:
+
+```sql
+-- ตาราง Laravel
+CREATE SCHEMA backoffice;
+CREATE TABLE backoffice.admins (...);
+
+-- ตาราง NestJS อยู่ใน public schema
+```
+
+อัปเดตไฟล์ `.env`:
+```env
+DATABASE_URL="postgresql://postgres:@127.0.0.1:5432/nest_posts?schema=public"
+```
+
+### 6. สำรองข้อมูลก่อน Reset
+
+หากจำเป็นต้องใช้ `migrate reset`:
+
+```bash
+# 1. สำรองข้อมูลตารางภายนอกก่อน
+pg_dump -h 127.0.0.1 -U postgres -t admins nest_posts > admins_backup.sql
+
+# 2. รัน reset
+npx prisma migrate reset
+
+# 3. กลับคืนตารางภายนอก
+psql -h 127.0.0.1 -U postgres -d nest_posts < admins_backup.sql
+```
+
+### ⚠️ คำเตือนสำคัญ
+
+**ไม่มี migrations ที่เหมาะสม**: การรัน `npx prisma migrate reset` จะลบตารางใดๆ ที่ไม่ได้ถูกติดตามใน migration history แม้ว่าจะอยู่ใน `schema.prisma` ก็ตาม
+
+**มี migrations ที่เหมาะสม**: ตารางทั้งหมดที่ถูกกำหนดใน `schema.prisma` และ migration history จะถูกรักษาไว้และกลับคืนอย่างถูกต้อง
+
+## การ Sync การเปลี่ยนแปลงฐานข้อมูลจากแหล่งภายนอก
+
+หากแอปพลิเคชันอื่น (เช่น Laravel backoffice) แก้ไข schema ฐานข้อมูล คุณสามารถ sync การเปลี่ยนแปลงเหล่านั้นมายัง NestJS API ของคุณได้:
+
+### ขั้นตอนที่ 1: Introspect ฐานข้อมูล
+Pull schema ฐานข้อมูลปัจจุบันเข้าไปในไฟล์ Prisma schema ของคุณ:
 ```bash
 npx prisma db pull
 ```
 
-This command will update `prisma/schema.prisma` with any new fields or changes made to the database.
+คำสั่งนี้จะอัปเดต `prisma/schema.prisma` พร้อมฟิลด์ใหม่หรือการเปลี่ยนแปลงที่ทำกับฐานข้อมูล
 
-### Step 2: Generate Prisma Client
-Update the Prisma Client with the new schema:
+### ขั้นตอนที่ 2: สร้าง Prisma Client
+อัปเดต Prisma Client ด้วย schema ใหม่:
 ```bash
 npx prisma generate
 ```
 
-### Step 3: Create a Migration File
-**IMPORTANT**: After pulling changes, you must create a migration file to persist these changes:
+### ขั้นตอนที่ 3: สร้างไฟล์ Migration
+**สำคัญ**: หลังจาก pull การเปลี่ยนแปลง คุณต้องสร้างไฟล์ migration เพื่อเก็บการเปลี่ยนแปลงเหล่านี้:
 ```bash
 npx prisma migrate dev --name describe_your_changes
 ```
 
-This ensures that when you run `npx prisma migrate reset` in the future, the external changes won't be lost.
+สิ่งนี้ช่วยให้แน่ใจว่าเมื่อคุณรัน `npx prisma migrate reset` ในอนาคต การเปลี่ยนแปลงจากภายนอกจะไม่หายไป
 
-### Step 4: Update Your Code
-Manually update your DTOs and entities to reflect the new fields:
-- Update `src/posts/entities/post.entity.ts` to add new fields
-- Update `src/posts/dto/create-post.dto.ts` for creation
-- Update `src/posts/dto/update-post.dto.ts` for updates
+### ขั้นตอนที่ 4: อัปเดตโค้ดของคุณ
+อัปเดต DTOs และ entities ของคุณด้วยตนเองเพื่อสะท้อนฟิลด์ใหม่:
+- อัปเดต `src/posts/entities/post.entity.ts` เพื่อเพิ่มฟิลด์ใหม่
+- อัปเดต `src/posts/dto/create-post.dto.ts` สำหรับการสร้าง
+- อัปเดต `src/posts/dto/update-post.dto.ts` สำหรับการอัปเดต
 
-### Step 5: Test Your Changes
-Run tests to ensure everything works correctly:
+### ขั้นตอนที่ 5: ทดสอบการเปลี่ยนแปลงของคุณ
+รัน tests เพื่อให้แน่ใจว่าทุกอย่างทำงานอย่างถูกต้อง:
 ```bash
 npm test
 ```
 
-### Complete Example: After Laravel Adds `slug` and `isActive` Fields
+### ตัวอย่างที่สมบูรณ์: หลังจาก Laravel เพิ่มฟิลด์ `slug` และ `isActive`
 ```bash
-# 1. Pull the database schema
+# 1. Pull schema ฐานข้อมูล
 npx prisma db pull
 
-# 2. Generate Prisma Client
+# 2. สร้าง Prisma Client
 npx prisma generate
 
-# 3. Create migration to persist changes (CRITICAL STEP!)
+# 3. สร้าง migration เพื่อเก็บการเปลี่ยนแปลง (ขั้นตอนสำคัญ!)
 npx prisma migrate dev --name add_slug_and_is_active
 
-# 4. Update your DTOs and entities manually
-# 5. Run tests
+# 4. อัปเดต DTOs และ entities ของคุณด้วยตนเอง
+# 5. รัน tests
 npm test
 ```
 
-### ⚠️ Important Warning
+### ⚠️ คำเตือนสำคัญ
 
-**WITHOUT Step 3**: If you skip creating a migration after `db pull`, running `npx prisma migrate reset` will DELETE the external changes because they only exist in `schema.prisma` but not in the migration files.
+**ไม่มีขั้นตอนที่ 3**: หากคุณข้ามการสร้าง migration หลังจาก `db pull` การรัน `npx prisma migrate reset` จะลบการเปลี่ยนแปลงจากภายนอกเพราะมันมีอยู่เฉพาะใน `schema.prisma` แต่ไม่อยู่ในไฟล์ migration
 
-**WITH Step 3**: The migration files will include all changes, so `migrate reset` will properly restore everything.
+**มีขั้นตอนที่ 3**: ไฟล์ migration จะรวมการเปลี่ยนแปลงทั้งหมด ดังนั้น `migrate reset` จะกลับคืนทุกอย่างอย่างถูกต้อง
 
-## Testing
+## การทดสอบ
 
 ```bash
-# Run unit tests
+# รัน unit tests
 npm test
 
-# Run tests in watch mode
+# รัน tests ใน watch mode
 npm run test:watch
 
-# Run tests with coverage
+# รัน tests พร้อม coverage
 npm run test:cov
 
-# Run e2e tests
+# รัน e2e tests
 npm run test:e2e
 ```
 
-## Project Structure
+## โครงสร้างโปรเจค
 
 ```
 src/
@@ -300,17 +411,17 @@ src/
 └── main.ts
 ```
 
-## Best Practices Implemented
+## แนวทางปฏิบัติที่ดีที่ใช้ในโปรเจคนี้
 
-1. **Separation of Concerns**: Controller, Service, and Repository pattern
-2. **DTO Validation**: Using class-validator for input validation
-3. **Global Validation Pipe**: Automatic validation of all requests
-4. **Error Handling**: Proper HTTP exceptions (NotFoundException)
-5. **Type Safety**: Full TypeScript support with Prisma
-6. **Module Organization**: Feature-based module structure
-7. **Database Connection**: Global Prisma module with lifecycle hooks
-8. **RESTful API**: Following REST conventions
-9. **Soft Delete**: Non-destructive delete with restore functionality
+1. **Separation of Concerns**: รูปแบบ Controller, Service และ Repository
+2. **DTO Validation**: ใช้ class-validator สำหรับการตรวจสอบ input
+3. **Global Validation Pipe**: การตรวจสอบ requests ทั้งหมดโดยอัตโนมัติ
+4. **Error Handling**: HTTP exceptions ที่เหมาะสม (NotFoundException)
+5. **Type Safety**: รองรับ TypeScript อย่างเต็มรูปแบบด้วย Prisma
+6. **Module Organization**: โครงสร้าง module แบบแยกตาม feature
+7. **Database Connection**: Prisma module แบบ global พร้อม lifecycle hooks
+8. **RESTful API**: ปฏิบัติตามแนวทาง REST
+9. **Soft Delete**: การลบแบบไม่ทำลายพร้อมฟังก์ชันกลับคืน
 
 ## License
 
