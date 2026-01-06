@@ -25,4 +25,12 @@ export class UpdatePostDto {
   @IsString()
   @IsOptional()
   cover?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL slug for the post',
+    example: 'updated-blog-post-title',
+  })
+  @IsString()
+  @IsOptional()
+  slug?: string;
 }

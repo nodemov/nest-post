@@ -26,4 +26,13 @@ export class CreatePostDto {
   @IsString()
   @IsOptional()
   cover?: string;
+
+  @ApiProperty({
+    description: 'URL slug for the post',
+    example: 'my-first-blog-post',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  slug?: string;
 }

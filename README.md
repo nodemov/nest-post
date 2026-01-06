@@ -176,6 +176,7 @@ curl -X DELETE http://localhost:3000/posts/1/force
 | title | String | Post title (required) |
 | detail | String | Post content (required) |
 | cover | String | Cover image URL (optional) |
+| slug | String | URL slug (optional) |
 | deletedAt | DateTime | Soft delete timestamp (nullable) |
 | createdAt | DateTime | Creation timestamp |
 | updatedAt | DateTime | Last update timestamp |
@@ -200,6 +201,49 @@ npx prisma studio
 
 # Reset database
 npx prisma migrate reset
+```
+
+## Syncing Database Changes from External Sources
+
+If another application (e.g., Laravel backoffice) modifies the database schema, you can sync those changes to your NestJS API:
+
+### Step 1: Introspect the Database
+Pull the current database schema into your Prisma schema file:
+```bash
+npx prisma db pull
+```
+
+This command will update `prisma/schema.prisma` with any new fields or changes made to the database.
+
+### Step 2: Generate Prisma Client
+Update the Prisma Client with the new schema:
+```bash
+npx prisma generate
+```
+
+### Step 3: Update Your Code
+Manually update your DTOs and entities to reflect the new fields:
+- Update `src/posts/entities/post.entity.ts` to add new fields
+- Update `src/posts/dto/create-post.dto.ts` for creation
+- Update `src/posts/dto/update-post.dto.ts` for updates
+
+### Step 4: Test Your Changes
+Run tests to ensure everything works correctly:
+```bash
+npm test
+```
+
+### Example: After Laravel Adds a `slug` Field
+```bash
+# 1. Pull the changes
+npx prisma db pull
+
+# 2. Generate new client
+npx prisma generate
+
+# 3. Update your DTOs and entities manually
+# 4. Run tests
+npm test
 ```
 
 ## Testing

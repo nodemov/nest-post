@@ -21,6 +21,13 @@ export class PostEntity {
   cover: string | null;
 
   @ApiProperty({
+    description: 'Post URL slug',
+    example: 'my-blog-post',
+    nullable: true,
+  })
+  slug: string | null;
+
+  @ApiProperty({
     description: 'Soft delete timestamp',
     example: null,
     nullable: true,
