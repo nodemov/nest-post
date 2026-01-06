@@ -55,6 +55,18 @@ npm run start:prod
 
 The application will run on `http://localhost:3000`
 
+## API Documentation
+
+Once the application is running, you can access the **Swagger API documentation** at:
+
+**http://localhost:3000/api**
+
+The Swagger UI provides:
+- Interactive API testing
+- Complete endpoint documentation
+- Request/response schemas
+- Try it out feature for all endpoints
+
 ## API Endpoints
 
 ### Posts
