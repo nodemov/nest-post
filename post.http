@@ -103,3 +103,15 @@ Content-Type: application/json
 
 ### Get non-existent post (should return 404)
 GET {{baseUrl}}/posts/9999
+
+### Test validation - invalid ID format (should return 400)
+GET {{baseUrl}}/posts/abc
+
+### Test validation - invalid ID format with special chars (should return 400)
+GET {{baseUrl}}/posts/12@34
+
+### Test validation - negative ID (should return 400)
+GET {{baseUrl}}/posts/-5
+
+### Test validation - decimal ID (should return 400)
+GET {{baseUrl}}/posts/12.5

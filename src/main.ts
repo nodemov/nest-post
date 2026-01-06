@@ -4,6 +4,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  process.env.TZ = 'UTC';
+
   const app = await NestFactory.create(AppModule);
 
   // Enable validation globally

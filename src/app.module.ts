@@ -1,7 +1,8 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationPipe, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { PostsModule } from './posts/posts.module';
+import { ValidateIdMiddleware } from './common/middleware/validate-id.middleware';
 
 @Module({
   imports: [PrismaModule, PostsModule],
@@ -12,4 +13,10 @@ import { PostsModule } from './posts/posts.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ValidateIdMiddleware)
+      .forRoutes('posts/:id', 'posts/:id/*');
+  }
+}

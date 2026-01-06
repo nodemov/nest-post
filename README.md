@@ -30,6 +30,7 @@ npm install
 Create a `.env` file in the root directory:
 ```
 DATABASE_URL="postgresql://postgres:@127.0.0.1:5432/nest_posts?schema=public"
+TZ=UTC
 ```
 
 3. Generate Prisma Client:
