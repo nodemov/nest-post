@@ -11,6 +11,7 @@
 - ✅ การตรวจสอบข้อมูลด้วย class-validator
 - ✅ การจัดการ exception แบบ global
 - ✅ แนวทางปฏิบัติที่ดีของ REST API
+- ✅ API Versioning (URI versioning - v1)
 - ✅ Database seeder พร้อมโพสต์ทดสอบ 500 รายการ
 
 ## สิ่งที่ต้องมีก่อนเริ่มใช้งาน
@@ -72,25 +73,27 @@ Swagger UI ให้บริการ:
 
 ## API Endpoints
 
-### Posts
+### Posts (API Version 1)
+
+ทุก endpoints ใช้ URI versioning โดยเริ่มต้นด้วย `/v1`
 
 | Method | Endpoint | คำอธิบาย |
 |--------|----------|----------|
-| GET | `/posts` | ดึงโพสต์ที่ active ทั้งหมด (รองรับ pagination ด้วย ?page&limit) |
-| GET | `/posts/all/with-deleted` | ดึงโพสต์ทั้งหมดรวมทั้งที่ถูกลบ (รองรับ pagination) |
-| GET | `/posts/deleted/only` | ดึงเฉพาะโพสต์ที่ถูกลบ (รองรับ pagination) |
-| GET | `/posts/:id` | ดึงโพสต์ตาม ID |
-| POST | `/posts` | สร้างโพสต์ใหม่ |
-| PATCH | `/posts/:id` | อัปเดตโพสต์ |
-| PATCH | `/posts/:id/restore` | กลับคืนโพสต์ที่ถูก soft-delete |
-| DELETE | `/posts/:id` | Soft delete โพสต์ |
-| DELETE | `/posts/:id/force` | ลบโพสต์ถาวร |
+| GET | `/v1/posts` | ดึงโพสต์ที่ active ทั้งหมด (รองรับ pagination ด้วย ?page&limit) |
+| GET | `/v1/posts/all/with-deleted` | ดึงโพสต์ทั้งหมดรวมทั้งที่ถูกลบ (รองรับ pagination) |
+| GET | `/v1/posts/deleted/only` | ดึงเฉพาะโพสต์ที่ถูกลบ (รองรับ pagination) |
+| GET | `/v1/posts/:id` | ดึงโพสต์ตาม ID |
+| POST | `/v1/posts` | สร้างโพสต์ใหม่ |
+| PATCH | `/v1/posts/:id` | อัปเดตโพสต์ |
+| PATCH | `/v1/posts/:id/restore` | กลับคืนโพสต์ที่ถูก soft-delete |
+| DELETE | `/v1/posts/:id` | Soft delete โพสต์ |
+| DELETE | `/v1/posts/:id/force` | ลบโพสต์ถาวร |
 
 ### ตัวอย่างการใช้งาน
 
 #### สร้างโพสต์
 ```bash
-curl -X POST http://localhost:3000/posts \
+curl -X POST http://localhost:3000/v1/posts \
   -H "Content-Type: application/json" \
   -d '{
     "title": "My First Post",
@@ -102,21 +105,21 @@ curl -X POST http://localhost:3000/posts \
 #### ดึงโพสต์ทั้งหมด
 ```bash
 # ดึงโพสต์ทั้งหมด (ไม่มี pagination)
-curl http://localhost:3000/posts
+curl http://localhost:3000/v1/posts
 
 # ดึงโพสต์แบบ pagination - หน้า 1 พร้อม limit เริ่มต้น (10 รายการ)
-curl http://localhost:3000/posts?page=1
+curl http://localhost:3000/v1/posts?page=1
 
 # ดึงโพสต์แบบ pagination - หน้า 2 พร้อม 20 รายการต่อหน้า
-curl http://localhost:3000/posts?page=2&limit=20
+curl http://localhost:3000/v1/posts?page=2&limit=20
 ```
 
 #### ดึงโพสต์แบบ Pagination พร้อม Metadata
 ```bash
 # endpoint ใดๆ ที่มี page/limit จะคืนค่าแบบ paginated response:
-curl "http://localhost:3000/posts?page=1&limit=10"
-curl "http://localhost:3000/posts/all/with-deleted?page=1&limit=20"
-curl "http://localhost:3000/posts/deleted/only?page=1&limit=15"
+curl "http://localhost:3000/v1/posts?page=1&limit=10"
+curl "http://localhost:3000/v1/posts/all/with-deleted?page=1&limit=20"
+curl "http://localhost:3000/v1/posts/deleted/only?page=1&limit=15"
 
 # Response จะรวม pagination metadata:
 # {
@@ -134,12 +137,12 @@ curl "http://localhost:3000/posts/deleted/only?page=1&limit=15"
 
 #### ดึงโพสต์ตาม ID
 ```bash
-curl http://localhost:3000/posts/1
+curl http://localhost:3000/v1/posts/1
 ```
 
 #### อัปเดตโพสต์
 ```bash
-curl -X PATCH http://localhost:3000/posts/1 \
+curl -X PATCH http://localhost:3000/v1/posts/1 \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Updated Title"
@@ -148,22 +151,22 @@ curl -X PATCH http://localhost:3000/posts/1 \
 
 #### Soft Delete โพสต์
 ```bash
-curl -X DELETE http://localhost:3000/posts/1
+curl -X DELETE http://localhost:3000/v1/posts/1
 ```
 
 #### กลับคืนโพสต์ที่ถูกลบ
 ```bash
-curl -X PATCH http://localhost:3000/posts/1/restore
+curl -X PATCH http://localhost:3000/v1/posts/1/restore
 ```
 
 #### ดึงโพสต์ที่ถูกลบ
 ```bash
-curl http://localhost:3000/posts/deleted/only
+curl http://localhost:3000/v1/posts/deleted/only
 ```
 
 #### ลบโพสต์ถาวร (Force Delete)
 ```bash
-curl -X DELETE http://localhost:3000/posts/1/force
+curl -X DELETE http://localhost:3000/v1/posts/1/force
 ```
 
 ## โครงสร้างฐานข้อมูล
@@ -419,7 +422,8 @@ src/
 6. **Module Organization**: โครงสร้าง module แบบแยกตาม feature
 7. **Database Connection**: Prisma module แบบ global พร้อม lifecycle hooks
 8. **RESTful API**: ปฏิบัติตามแนวทาง REST
-9. **Soft Delete**: การลบแบบไม่ทำลายพร้อมฟังก์ชันกลับคืน
+9. **API Versioning**: ใช้ URI versioning เพื่อรองรับการพัฒนา API ในอนาคต
+10. **Soft Delete**: การลบแบบไม่ทำลายพร้อมฟังก์ชันกลับคืน
 
 ## License
 
