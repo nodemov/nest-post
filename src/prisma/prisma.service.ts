@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
+import { nanoid } from 'nanoid';
 
 function isAlreadyHashed(password: string): boolean {
   return password.startsWith('$argon2');
@@ -12,6 +13,11 @@ function createPrismaClientWithExtensions() {
     query: {
       admin: {
         async create({ args, query }) {
+          // Auto-generate nanoid if not provided
+          if (!args.data.id) {
+            args.data.id = nanoid(32);
+          }
+          // Auto-hash password if not already hashed
           if (args.data.password && !isAlreadyHashed(args.data.password)) {
             args.data.password = await argon2.hash(args.data.password);
           }

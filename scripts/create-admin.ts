@@ -7,7 +7,7 @@ async function createDefaultAdmin() {
     await prisma.$connect();
 
     const existingAdmin = await prisma.admin.findUnique({
-      where: { email: 'admin@example.com' },
+      where: { email: 'admin@gmail.com' },
     });
 
     if (existingAdmin) {
