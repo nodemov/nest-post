@@ -1,6 +1,6 @@
 const React = require('react');
 
-function Layout({ children, title = 'Posts App' }) {
+function Layout({ children, title = 'Posts App', isAuthenticated = true }) {
     return (
         <html lang="en">
             <head>
@@ -192,11 +192,22 @@ function Layout({ children, title = 'Posts App' }) {
                 <header>
                     <div className="container">
                         <h1>📝 NestJS Posts CRUD</h1>
-                        <nav>
-                            <a href="/v1/posts/web">All Posts</a>
-                            <a href="/v1/posts/web/create">Create Post</a>
-                            <a href="/api">API Docs</a>
-                        </nav>
+                        {isAuthenticated ? (
+                            <nav>
+                                <a href="/v1/posts/web">All Posts</a>
+                                <a href="/v1/posts/web/create">Create Post</a>
+                                <a href="/v1/auth/profile">Profile</a>
+                                <a href="/api">API Docs</a>
+                                <form action="/v1/auth/logout" method="POST" style={{ display: 'inline', margin: 0 }}>
+                                    <button type="submit" style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '1rem', padding: '0.5rem 1rem', textDecoration: 'underline' }}>Logout</button>
+                                </form>
+                            </nav>
+                        ) : (
+                            <nav>
+                                <a href="/v1/auth/login">Login</a>
+                                <a href="/api">API Docs</a>
+                            </nav>
+                        )}
                     </div>
                 </header>
                 <main>

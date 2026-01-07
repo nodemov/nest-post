@@ -5,7 +5,7 @@ function Index({ posts, isPaginated, pagination, search }) {
     const postsList = isPaginated ? posts.data : posts;
 
     return (
-        <Layout title="All Posts">
+        <Layout title="All Posts" isAuthenticated={true}>
             <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h2>All Posts</h2>

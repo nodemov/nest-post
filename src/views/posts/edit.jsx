@@ -3,7 +3,7 @@ const Layout = require('../layout');
 
 function Edit({ post }) {
     return (
-        <Layout title={`Edit: ${post.title}`}>
+        <Layout title={`Edit: ${post.title}`} isAuthenticated={true}>
             <div style={{ marginBottom: '1rem' }}>
                 <a href={`/v1/posts/web/${post.id}`} className="btn btn-sm">← Back to Post</a>
             </div>

@@ -13,6 +13,7 @@ import {
   Render,
   Res,
   Redirect,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -29,6 +30,7 @@ import { SearchPostsDto } from './dto/search-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @ApiTags('posts')
 @Controller({ path: 'posts', version: '1' })
@@ -80,6 +82,7 @@ export class PostsController {
   // ============= WEB ROUTES (JSX Views) - Must be BEFORE :id routes =============
 
   @Get('web')
+  @UseGuards(AuthGuard)
   @Render('posts/index')
   @ApiOperation({ summary: 'Web: View all posts (HTML)' })
   async webIndex(@Query() searchDto: SearchPostsDto) {
@@ -105,6 +108,7 @@ export class PostsController {
   }
 
   @Get('web/create')
+  @UseGuards(AuthGuard)
   @Render('posts/create')
   @ApiOperation({ summary: 'Web: Show create post form (HTML)' })
   webCreateForm() {
@@ -112,6 +116,7 @@ export class PostsController {
   }
 
   @Post('web')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Web: Create a new post and redirect (HTML)' })
   async webCreate(@Body() createPostDto: CreatePostDto, @Res() res: Response) {
     const post = await this.postsService.create(createPostDto);
@@ -119,6 +124,7 @@ export class PostsController {
   }
 
   @Get('web/:id')
+  @UseGuards(AuthGuard)
   @Render('posts/show')
   @ApiOperation({ summary: 'Web: View a single post (HTML)' })
   async webShow(@Param('id', ParseIntPipe) id: number) {
@@ -127,6 +133,7 @@ export class PostsController {
   }
 
   @Get('web/:id/edit')
+  @UseGuards(AuthGuard)
   @Render('posts/edit')
   @ApiOperation({ summary: 'Web: Show edit post form (HTML)' })
   async webEditForm(@Param('id', ParseIntPipe) id: number) {
@@ -135,6 +142,7 @@ export class PostsController {
   }
 
   @Post('web/:id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Web: Update a post and redirect (HTML)' })
   async webUpdate(
     @Param('id', ParseIntPipe) id: number,
@@ -146,6 +154,7 @@ export class PostsController {
   }
 
   @Post('web/:id/delete')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Web: Delete a post and redirect (HTML)' })
   async webDelete(
     @Param('id', ParseIntPipe) id: number,
@@ -156,6 +165,7 @@ export class PostsController {
   }
 
   @Post('web/:id/restore')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Web: Restore a post and redirect (HTML)' })
   async webRestore(
     @Param('id', ParseIntPipe) id: number,

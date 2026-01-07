@@ -4,11 +4,25 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { join } from 'path';
+import * as session from 'express-session';
 
 async function bootstrap() {
   process.env.TZ = 'UTC';
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Configure session
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || 'nest-posts-secret-key-change-in-production',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        httpOnly: true,
+      },
+    }),
+  );
 
   // Configure JSX view engine
   app.setBaseViewsDir(join(__dirname, '../views'));

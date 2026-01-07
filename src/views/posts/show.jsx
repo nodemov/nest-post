@@ -3,7 +3,7 @@ const Layout = require('../layout');
 
 function Show({ post }) {
     return (
-        <Layout title={post.title}>
+        <Layout title={post.title} isAuthenticated={true}>
             <div style={{ marginBottom: '1rem' }}>
                 <a href="/v1/posts/web" className="btn btn-sm">← Back to Posts</a>
             </div>

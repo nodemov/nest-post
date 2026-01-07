@@ -3,7 +3,7 @@ const Layout = require('../layout');
 
 function Create() {
     return (
-        <Layout title="Create New Post">
+        <Layout title="Create Post" isAuthenticated={true}>
             <div style={{ marginBottom: '1rem' }}>
                 <a href="/v1/posts/web" className="btn btn-sm">← Back to Posts</a>
             </div>

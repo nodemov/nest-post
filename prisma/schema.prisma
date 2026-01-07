@@ -27,3 +27,16 @@ model users {
   gender String? @db.VarChar(10)
   isActive  Boolean   @default(false)
 }
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(100)
+  password  String
+  email     String?  @unique @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
