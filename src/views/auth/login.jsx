@@ -16,13 +16,13 @@ function Login({ error }) {
 
                     <form action="/v1/auth/login" method="POST">
                         <div style={{ marginBottom: '1.5rem' }}>
-                            <label htmlFor="username" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-                                Username
+                            <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+                                Email
                             </label>
                             <input
-                                type="text"
-                                id="username"
-                                name="username"
+                                type="email"
+                                id="email"
+                                name="email"
                                 required
                                 autoFocus
                                 style={{ width: '100%', padding: '0.75rem', border: '2px solid #ddd', borderRadius: '5px' }}

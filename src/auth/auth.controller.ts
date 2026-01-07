@@ -32,18 +32,18 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Process login' })
   async login(
-    @Body('username') username: string,
+    @Body('email') email: string,
     @Body('password') password: string,
     @Session() session: Record<string, any>,
     @Res() res: Response,
   ) {
     try {
-      const admin = await this.authService.validateAdmin(username, password);
+      const admin = await this.authService.validateAdmin(email, password);
       session.admin = admin;
       return res.redirect('/v1/posts/web');
     } catch (error) {
       return res.render('auth/login', {
-        error: 'Invalid username or password',
+        error: 'Invalid email or password',
       });
     }
   }

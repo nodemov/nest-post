@@ -6,9 +6,9 @@ import * as argon2 from 'argon2';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async validateAdmin(username: string, password: string) {
+  async validateAdmin(email: string, password: string) {
     const admin = await this.prisma.admin.findUnique({
-      where: { username },
+      where: { email },
     });
 
     if (!admin || !admin.isActive) {
@@ -22,23 +22,19 @@ export class AuthService {
 
     return {
       id: admin.id,
-      username: admin.username,
       email: admin.email,
       name: admin.name,
     };
   }
 
   async createAdmin(
-    username: string,
-    password: string,
     email: string,
+    password: string,
     name: string,
   ) {
-    const hashedPassword = await argon2.hash(password);
     return this.prisma.admin.create({
       data: {
-        username,
-        password: hashedPassword,
+        password,
         email,
         name,
       },
