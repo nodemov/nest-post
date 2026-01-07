@@ -25,6 +25,22 @@ function Index({ posts, isPaginated, pagination, search }) {
                                 style={{ width: '100%', padding: '0.75rem', border: '2px solid #ddd', borderRadius: '5px' }}
                             />
                         </div>
+                        <div>
+                            <label htmlFor="limit" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Per Page</label>
+                            <select
+                                id="limit"
+                                name="limit"
+                                defaultValue={pagination?.limit || 10}
+                                onChange={(e) => { e.target.form.submit(); }}
+                                style={{ padding: '0.75rem', border: '2px solid #ddd', borderRadius: '5px', cursor: 'pointer' }}
+                            >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
                         <button type="submit" className="btn" style={{ marginBottom: 0 }}>Search</button>
                         {search && (
                             <a href="/v1/posts/web" className="btn" style={{ background: '#6c757d', marginBottom: 0 }}>Clear</a>
