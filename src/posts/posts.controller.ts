@@ -10,6 +10,9 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  Render,
+  Res,
+  Redirect,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,9 +21,11 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { SearchPostsDto } from './dto/search-posts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
@@ -71,6 +76,96 @@ export class PostsController {
   ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
     return this.postsService.findDeleted(paginationDto);
   }
+
+  // ============= WEB ROUTES (JSX Views) - Must be BEFORE :id routes =============
+
+  @Get('web')
+  @Render('posts/index')
+  @ApiOperation({ summary: 'Web: View all posts (HTML)' })
+  async webIndex(@Query() searchDto: SearchPostsDto) {
+    const result = await this.postsService.searchPosts(searchDto);
+    
+    if (Array.isArray(result)) {
+      return { posts: result, isPaginated: false, search: searchDto.search || '' };
+    }
+    
+    return {
+      posts: result,
+      isPaginated: true,
+      search: searchDto.search || '',
+      pagination: {
+        currentPage: result.meta.page,
+        totalPages: result.meta.totalPages,
+        total: result.meta.total,
+        limit: result.meta.limit,
+        hasNextPage: result.meta.hasNextPage,
+        hasPreviousPage: result.meta.hasPreviousPage,
+      },
+    };
+  }
+
+  @Get('web/create')
+  @Render('posts/create')
+  @ApiOperation({ summary: 'Web: Show create post form (HTML)' })
+  webCreateForm() {
+    return {};
+  }
+
+  @Post('web')
+  @ApiOperation({ summary: 'Web: Create a new post and redirect (HTML)' })
+  async webCreate(@Body() createPostDto: CreatePostDto, @Res() res: Response) {
+    const post = await this.postsService.create(createPostDto);
+    res.redirect(`/v1/posts/web/${post.id}`);
+  }
+
+  @Get('web/:id')
+  @Render('posts/show')
+  @ApiOperation({ summary: 'Web: View a single post (HTML)' })
+  async webShow(@Param('id', ParseIntPipe) id: number) {
+    const post = await this.postsService.findOne(id);
+    return { post };
+  }
+
+  @Get('web/:id/edit')
+  @Render('posts/edit')
+  @ApiOperation({ summary: 'Web: Show edit post form (HTML)' })
+  async webEditForm(@Param('id', ParseIntPipe) id: number) {
+    const post = await this.postsService.findOne(id);
+    return { post };
+  }
+
+  @Post('web/:id')
+  @ApiOperation({ summary: 'Web: Update a post and redirect (HTML)' })
+  async webUpdate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+    @Res() res: Response,
+  ) {
+    await this.postsService.update(id, updatePostDto);
+    res.redirect(`/v1/posts/web/${id}`);
+  }
+
+  @Post('web/:id/delete')
+  @ApiOperation({ summary: 'Web: Delete a post and redirect (HTML)' })
+  async webDelete(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    await this.postsService.remove(id);
+    res.redirect(`/v1/posts/web`);
+  }
+
+  @Post('web/:id/restore')
+  @ApiOperation({ summary: 'Web: Restore a post and redirect (HTML)' })
+  async webRestore(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    await this.postsService.restore(id);
+    res.redirect(`/v1/posts/web/${id}`);
+  }
+
+  // ============= API ROUTES =============
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a post by ID' })

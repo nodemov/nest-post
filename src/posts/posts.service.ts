@@ -4,6 +4,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { SearchPostsDto } from './dto/search-posts.dto';
 import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
 
 @Injectable()
@@ -13,6 +14,45 @@ export class PostsService {
   async create(createPostDto: CreatePostDto): Promise<PostEntity> {
     return this.prisma.post.create({
       data: createPostDto,
+    });
+  }
+
+  async searchPosts(
+    searchDto: SearchPostsDto,
+  ): Promise<PostEntity[] | PaginatedResponseDto<PostEntity>> {
+    const { search, page, limit } = searchDto;
+    
+    const whereClause = {
+      deletedAt: null,
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' as const } },
+          { detail: { contains: search, mode: 'insensitive' as const } },
+        ],
+      }),
+    };
+
+    if (page !== undefined || limit !== undefined) {
+      const pageNum = page || 1;
+      const limitNum = limit || 10;
+      const skip = (pageNum - 1) * limitNum;
+
+      const [data, total] = await Promise.all([
+        this.prisma.post.findMany({
+          where: whereClause,
+          orderBy: { createdAt: 'desc' },
+          skip,
+          take: limitNum,
+        }),
+        this.prisma.post.count({ where: whereClause }),
+      ]);
+
+      return new PaginatedResponseDto(data, total, pageNum, limitNum);
+    }
+
+    return this.prisma.post.findMany({
+      where: whereClause,
+      orderBy: { createdAt: 'desc' },
     });
   }
 

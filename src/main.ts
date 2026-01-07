@@ -1,12 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { join } from 'path';
 
 async function bootstrap() {
   process.env.TZ = 'UTC';
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Configure JSX view engine
+  app.setBaseViewsDir(join(__dirname, '../views'));
+  app.setViewEngine('jsx');
+  app.engine('jsx', require('express-react-views').createEngine());
 
   // Enable API versioning
   app.enableVersioning({
